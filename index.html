@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>星云阅读器 (Nebula Reader)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Noto Sans SC"', 'system-ui', 'sans-serif'],
+              serif: ['"Noto Serif SC"', 'Georgia', 'serif'],
+              mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+              art: ['"Ma Shan Zheng"', 'cursive'],
+            },
+            colors: {
+              sepia: {
+                50: '#f9f7f1',
+                100: '#f4ecd8',
+                200: '#eaddb6',
+                300: '#dec790',
+                800: '#5b4636',
+                900: '#433422',
+              },
+              green: {
+                 50: '#f0f9f4',
+                 100: '#dcfce7',
+                 200: '#bbf7d0', // Reading bg
+                 800: '#166534', // Text
+                 900: '#14532d',
+              }
+            },
+            typography: (theme) => ({
+              DEFAULT: {
+                css: {
+                  color: theme('colors.gray.700'),
+                  maxWidth: '65ch',
+                },
+              },
+              sepia: {
+                css: {
+                  '--tw-prose-body': theme('colors.sepia.800'),
+                  '--tw-prose-headings': theme('colors.sepia.900'),
+                  '--tw-prose-lead': theme('colors.sepia.800'),
+                  '--tw-prose-links': theme('colors.sepia.900'),
+                  '--tw-prose-bold': theme('colors.sepia.900'),
+                  '--tw-prose-counters': theme('colors.sepia.800'),
+                  '--tw-prose-bullets': theme('colors.sepia.800'),
+                  '--tw-prose-hr': theme('colors.sepia.300'),
+                  '--tw-prose-quotes': theme('colors.sepia.900'),
+                  '--tw-prose-quote-borders': theme('colors.sepia.300'),
+                  '--tw-prose-captions': theme('colors.sepia.800'),
+                  '--tw-prose-code': theme('colors.sepia.900'),
+                  '--tw-prose-pre-code': theme('colors.sepia.100'),
+                  '--tw-prose-pre-bg': theme('colors.sepia.900'),
+                  '--tw-prose-th-borders': theme('colors.sepia.300'),
+                  '--tw-prose-td-borders': theme('colors.sepia.200'),
+                },
+              },
+              green: {
+                 css: {
+                  '--tw-prose-body': '#064e3b',
+                  '--tw-prose-headings': '#064e3b',
+                  '--tw-prose-lead': '#064e3b',
+                  '--tw-prose-links': '#047857',
+                  '--tw-prose-bold': '#064e3b',
+                  '--tw-prose-counters': '#064e3b',
+                  '--tw-prose-bullets': '#064e3b',
+                  '--tw-prose-hr': '#86efac',
+                  '--tw-prose-quotes': '#064e3b',
+                  '--tw-prose-quote-borders': '#86efac',
+                  '--tw-prose-captions': '#064e3b',
+                  '--tw-prose-code': '#064e3b',
+                  '--tw-prose-pre-code': '#dcfce7',
+                  '--tw-prose-pre-bg': '#166534',
+                  '--tw-prose-th-borders': '#86efac',
+                  '--tw-prose-td-borders': '#bbf7d0',
+                },
+              }
+            }),
+          },
+        },
+        plugins: [
+          function({ addBase, theme }) {
+            addBase({
+              'h1': { fontSize: theme('fontSize.2xl') },
+              'h2': { fontSize: theme('fontSize.xl') },
+              'h3': { fontSize: theme('fontSize.lg') },
+            })
+          }
+        ]
+      }
+    </script>
+    <style>
+      /* Custom scrollbar for reader */
+      .reader-scroll::-webkit-scrollbar {
+        width: 8px;
+      }
+      .reader-scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .reader-scroll::-webkit-scrollbar-thumb {
+        background-color: rgba(156, 163, 175, 0.3);
+        border-radius: 20px;
+        transition: background-color 0.2s;
+      }
+      .reader-scroll:hover::-webkit-scrollbar-thumb {
+         background-color: rgba(156, 163, 175, 0.5);
+      }
+      
+      /* Hide scrollbar for library grid but keep functionality */
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "react-markdown": "https://esm.sh/react-markdown@^10.1.0",
+    "react/": "https://esm.sh/react@^19.2.1/",
+    "react": "https://esm.sh/react@^19.2.1",
+    "lucide-react": "https://esm.sh/lucide-react@^0.559.0",
+    "pdfjs-dist": "https://esm.sh/pdfjs-dist@3.11.174"
+  }
+}
+</script>
+</head>
+  <body class="bg-gray-50 text-gray-900 h-screen overflow-hidden antialiased selection:bg-indigo-500 selection:text-white">
+    <div id="root" class="h-full"></div>
+  </body>
+</html>
