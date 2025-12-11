@@ -3,6 +3,7 @@ import { Book } from '../types';
 import { Plus, Search, Upload, BookOpen, Trash2, Sparkles, Copy, Check, AlertCircle } from 'lucide-react';
 import { generateBookMetadata, generateCoverImage } from '../services/gemini';
 import { extractTextFromPdf } from '../services/pdf';
+import { extractTextFromEpub, extractTextFromMobi } from '../services/ebookParser';
 
 interface LibraryProps {
   books: Book[];
@@ -13,7 +14,7 @@ interface LibraryProps {
   onGoToConverter: (book: Book) => void;
 }
 
-const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB Limit
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // Increased to 50MB for EPUB/MOBI
 
 const BookSkeleton = () => (
   <div className="flex flex-col animate-pulse">
@@ -73,7 +74,7 @@ const Library: React.FC<LibraryProps> = ({ books, isLoading = false, onOpenBook,
   const processFile = async (file: File) => {
     // 1. Check File Size
     if (file.size > MAX_FILE_SIZE) {
-      alert(`文件太大 (${(file.size / 1024 / 1024).toFixed(2)}MB)。请上传小于 20MB 的文件以保证浏览器性能。`);
+      alert(`文件太大 (${(file.size / 1024 / 1024).toFixed(2)}MB)。请上传小于 50MB 的文件。`);
       return;
     }
 
@@ -81,15 +82,22 @@ const Library: React.FC<LibraryProps> = ({ books, isLoading = false, onOpenBook,
     try {
       let text = '';
       let format: Book['format'] = 'txt';
+      const fileName = file.name.toLowerCase();
 
       // 2. Handle specific formats
-      if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+      if (file.type === 'application/pdf' || fileName.endsWith('.pdf')) {
         text = await extractTextFromPdf(file);
         format = 'pdf';
+      } else if (fileName.endsWith('.epub')) {
+        text = await extractTextFromEpub(file);
+        format = 'epub';
+      } else if (fileName.endsWith('.mobi')) {
+        text = await extractTextFromMobi(file);
+        format = 'mobi';
       } else {
         // Intelligent text reading (handles GBK/UTF-8)
         text = await readTextFile(file);
-        format = file.name.endsWith('.md') ? 'md' : 'txt';
+        format = fileName.endsWith('.md') ? 'md' : 'txt';
       }
 
       if (!text.trim()) {
@@ -218,7 +226,7 @@ const Library: React.FC<LibraryProps> = ({ books, isLoading = false, onOpenBook,
             type="file" 
             ref={fileInputRef} 
             className="hidden" 
-            accept=".txt,.md,.json,.pdf" 
+            accept=".txt,.md,.json,.pdf,.epub,.mobi" 
             onChange={handleFileUpload} 
           />
         </div>
@@ -237,7 +245,7 @@ const Library: React.FC<LibraryProps> = ({ books, isLoading = false, onOpenBook,
             <div className="text-center text-indigo-700 bg-white p-8 rounded-2xl shadow-xl">
               <Upload className="w-16 h-16 mx-auto mb-4 text-indigo-500" />
               <p className="text-xl font-bold">释放以添加书籍</p>
-              <p className="text-sm opacity-70 mt-2">支持 PDF, TXT (支持GBK), MD</p>
+              <p className="text-sm opacity-70 mt-2">支持 PDF, EPUB, MOBI, TXT, MD</p>
             </div>
           </div>
         )}
@@ -270,7 +278,7 @@ const Library: React.FC<LibraryProps> = ({ books, isLoading = false, onOpenBook,
                 >
                   {/* Format Badge */}
                   <div className="absolute top-2 right-2 z-20">
-                     <span className="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider border border-white/10">
+                     <span className={`bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider border border-white/10 ${book.format === 'epub' ? 'bg-green-600/80' : book.format === 'pdf' ? 'bg-red-600/80' : ''}`}>
                        {book.format}
                      </span>
                   </div>

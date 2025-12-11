@@ -3,7 +3,7 @@ export interface Book {
   title: string;
   author: string;
   content: string; // Storing content in memory for this demo.
-  format: 'txt' | 'md' | 'json' | 'pdf';
+  format: 'txt' | 'md' | 'json' | 'pdf' | 'epub' | 'mobi';
   coverUrl?: string;
   tags: string[];
   addedAt: number;

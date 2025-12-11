@@ -14,7 +14,8 @@
     "react-markdown": "^10.1.0",
     "react": "^19.2.1",
     "lucide-react": "^0.559.0",
-    "pdfjs-dist": "3.11.174"
+    "pdfjs-dist": "3.11.174",
+    "jszip": "3.10.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

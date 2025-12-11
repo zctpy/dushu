@@ -98,20 +98,43 @@
       }
     </script>
     <style>
-      /* Custom scrollbar for reader */
-      .reader-scroll::-webkit-scrollbar {
-        width: 8px;
+      /* Modern Scrollbar Styling */
+      /* Firefox */
+      .reader-scroll {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
       }
+
+      /* Webkit (Chrome, Safari, Edge) */
+      .reader-scroll::-webkit-scrollbar {
+        -webkit-appearance: none; /* Crucial for macOS to allow custom styling */
+        width: 6px;
+        height: 6px;
+      }
+
       .reader-scroll::-webkit-scrollbar-track {
         background: transparent;
+        margin: 4px;
       }
+
       .reader-scroll::-webkit-scrollbar-thumb {
         background-color: rgba(156, 163, 175, 0.3);
-        border-radius: 20px;
-        transition: background-color 0.2s;
+        border-radius: 9999px; /* Pill shape */
+        border: 2px solid transparent; /* Creates padding effect */
+        background-clip: content-box;
+        transition: background-color 0.2s ease;
       }
+
       .reader-scroll:hover::-webkit-scrollbar-thumb {
-         background-color: rgba(156, 163, 175, 0.5);
+         background-color: rgba(156, 163, 175, 0.6);
+      }
+      
+      /* Dark mode adjustment if parent is dark */
+      .dark .reader-scroll::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      .dark .reader-scroll:hover::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.4);
       }
       
       /* Hide scrollbar for library grid but keep functionality */
@@ -121,6 +144,15 @@
       .hide-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
+      }
+      
+      /* Animations */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.4s ease-out forwards;
       }
     </style>
   <script type="importmap">
@@ -132,7 +164,8 @@
     "react/": "https://esm.sh/react@^19.2.1/",
     "react": "https://esm.sh/react@^19.2.1",
     "lucide-react": "https://esm.sh/lucide-react@^0.559.0",
-    "pdfjs-dist": "https://esm.sh/pdfjs-dist@3.11.174"
+    "pdfjs-dist": "https://esm.sh/pdfjs-dist@3.11.174",
+    "jszip": "https://esm.sh/jszip@3.10.1"
   }
 }
 </script>
